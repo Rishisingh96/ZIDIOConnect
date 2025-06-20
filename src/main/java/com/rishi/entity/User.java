@@ -1,13 +1,22 @@
 package com.rishi.entity;
+import com.rishi.domain.Role;
 
-import jakarta.persistence.*;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToOne;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+/* 1. User Entity (Common for both Recruiter & Job Seeker)*/
 
-@Setter
 @Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
@@ -16,13 +25,16 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String name;
+    private String fullName;
     private String email;
     private String password;
-    private String role; // STUDENT, RECRUITER, ADMIN
+    private String phone; // For registration only
+
+    @Enumerated(EnumType.STRING)
+    private Role role; // JOB_SEEKER or RECRUITER
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
-    private StudentProfile studentProfile;
+    private UserProfile userProfile;
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private RecruiterProfile recruiterProfile;

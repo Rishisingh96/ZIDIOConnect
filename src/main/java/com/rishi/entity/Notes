@@ -1,0 +1,24 @@
+🔁 Flow of Job Portal (Full Cycle)
+🔸 Step-by-Step Use Case
+Step	Action	Entity
+1.	User/Recruiter registers	User
+2.	Job Seeker fills profile	UserProfile
+3.	Recruiter fills profile	RecruiterProfile
+4.	Recruiter posts a job	JobListing
+5.	Job shown to users	API: /jobs
+6.	User applies to job	JobApplication
+7.	Recruiter views applicants	API: /applications/job/{id}
+8.	Admin (optional) manages portal	e.g., remove jobs/users
+
+🎯 Final Suggested Entity List
+Entity Name	Purpose
+User	Common user for login
+UserProfile	Details of job seeker
+RecruiterProfile	Recruiter's company & personal info
+JobListing	Job details posted by recruiter
+JobApplication	Link between user and job
+
+💾 Database ERD Sample Diagram (Visual Summary)
+[User] 1---1 [UserProfile]
+    |
+    | 1---1 [RecruiterProfile] ---< [JobListing] ---< [JobApplication] >--- [User]

@@ -1,33 +1,19 @@
-package com.rishi.entity;
+package com.rishi.dto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import java.util.List;
 /*🔹 3. RecruiterProfile Entity (Details of Recruiter/Company)*/
-
-
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
-public class RecruiterProfile {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class RecruiterProfileDTO {
     private Long id;
-
     private String companyName;
     private String designation;
     private String companyWebsite;
-
-    @OneToOne
-    @JoinColumn(name = "user_id")
-    private User user;
-
-    @OneToMany(mappedBy = "recruiter")
-    private List<JobListing> jobListings;
+    private Long userId;
 }
 

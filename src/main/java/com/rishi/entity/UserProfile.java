@@ -5,23 +5,24 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+/*🔹 2. UserProfile Entity (Details of Job Seeker)*/
 
-@Setter
 @Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class StudentProfile {
-
+public class UserProfile {
     @Id
-    private Long userId;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    private String resumeUrl;
     private String education;
-    private String skills;
+    private String skills; // comma-separated or List<String>
+    private String experienceSummary;
+    private String resumeLink;
 
     @OneToOne
-    @MapsId
     @JoinColumn(name = "user_id")
     private User user;
 }
