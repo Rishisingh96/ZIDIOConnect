@@ -12,6 +12,5 @@ import lombok.Setter;
 @AllArgsConstructor
 public class OtpRequest {
     private String email;
-    private String fullname;
     private String otp;
 }
