@@ -26,7 +26,7 @@ public class JobApplication {
     private String resumeLink;
 
     @Enumerated(EnumType.STRING)
-    private ApplicationStatus status; // APPLIED, REVIEWED, etc.
+    private ApplicationStatus status; // APPLIED, REVIEWED, ACCEPTED, REJECTED
 
     @CreationTimestamp
     private LocalDateTime appliedDate;

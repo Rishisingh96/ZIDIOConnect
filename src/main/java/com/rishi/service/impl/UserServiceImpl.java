@@ -1,68 +1,57 @@
+// ✅ Final: UserServiceImpl.java (Clean + Working with ModelMapper)
 package com.rishi.service.impl;
 
-import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
+import com.rishi.config.JwtUtil;
+import com.rishi.domain.ROLE;
 import com.rishi.dto.UserDTO;
 import com.rishi.entity.User;
 import com.rishi.repository.UserRepository;
+import com.rishi.service.ModelMapperService;
 import com.rishi.service.UserService;
+import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+
+import java.util.Collections;
 
 @Service
+@RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
-    @Autowired
-    private UserRepository userRepository;
+    private final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
+    private final UserRepository userRepository;
+    private final ModelMapper modelMapper;
+    private final PasswordEncoder passwordEncoder;
+    private final AuthenticationManager authenticationManager;
+    private final JwtUtil jwtUtil;
+    private final ModelMapperService modelMapperService;
 
-    @Autowired
-    private ModelMapper modelMapper;
-
-
+    // 🔹 Create User (Signup)
     @Override
     public UserDTO createUser(UserDTO userDTO) {
-        // Check if the user already exists by email
         if (userRepository.existsByEmail(userDTO.getEmail())) {
-            // If user exists, return null or throw an exception
-            // return null; // or throw new UserAlreadyExistsException("User already exists with email: " + userDTO.getEmail());
             throw new RuntimeException("User already exists with email: " + userDTO.getEmail());
         }
-        User user = modelMapper.map(userDTO, User.class);
-        User savedUser  = userRepository.save(user);
-        return modelMapper.map(savedUser, UserDTO.class);
 
+        User user = modelMapperService.dtoToEntity(userDTO);
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+
+        // Default role: JOB_SEEKER
+        user.setRoles(Collections.singleton(ROLE.JOB_SEEKER));
+
+        User savedUser = userRepository.save(user);
+        logger.info("User created successfully with email: {}", savedUser.getEmail());
+
+        return modelMapperService.entityToDto(savedUser);
     }
 
+    // 🔹 (Optional Future Methods)
+    // public UserDTO getUserById(Long id) {}
+    // public List<UserDTO> getAllUsers() {}
+    // public void deleteUser(Long id) {}
+    // public UserDTO updateUser(UserDTO dto) {}
 }
-
-
-
-/*
-//Without ModelMapper
-@Override
-public UserDTO createUser(UserDTO userDTO) {
-    // Check if the user already exists by email
-    if(userRepository.existsByEmail(userDTO.getEmail())) {
-        // If user exists, return null or throw an exception
-        // return null; // or throw new UserAlreadyExistsException("User already exists with email: " + userDTO.getEmail());
-        throw new RuntimeException("User already exists with email: " + userDTO.getEmail());
-    }
-    User user = new User();
-    user.setEmail(userDTO.getEmail());
-    user.setFullName(userDTO.getFullName());
-    user.setPassword(userDTO.getPassword()); // later hash it
-    user.setPhoneNumber(userDTO.getPhoneNumber());
-    user.setRole(userDTO.getRole());
-
-    user = userRepository.save(user);
-
-    // return as DTO
-    return new UserDTO(
-            user.getId(),
-            user.getFullName(),
-            user.getEmail(),
-            user.getPassword(),
-            user.getPhoneNumber(),
-            user.getRole()
-    );
-}*/

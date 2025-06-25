@@ -10,10 +10,14 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserProfileDTO {
-    private Long id;
+    private String fullName;
     private String education;
-    private String skills; // Comma-separated or List<String>
+    private String skills;
     private String experienceSummary;
     private String resumeLink;
-    private Long userId;
+    private String phone;
+    private String location;
+    private String githubLink;
+    private String linkedinLink;
 }
+

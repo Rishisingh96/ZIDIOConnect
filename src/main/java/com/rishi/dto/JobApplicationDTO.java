@@ -11,14 +11,8 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class JobApplicationDTO {
-    private Long id;
-
-    private String resumeLink;
-
-    private ApplicationStatus status; // APPLIED, REVIEWED, etc.
-
-    private LocalDateTime appliedDate;
-
-    private Long userId;
     private Long jobId;
+    private String resumeLink;
+    private ApplicationStatus status;
 }
+

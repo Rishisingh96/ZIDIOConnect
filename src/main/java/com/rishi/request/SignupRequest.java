@@ -12,15 +12,7 @@ public class SignupRequest {
     private String email;
     private String password;
     private String phone;
-    private String role; // "JOB_SEEKER" or "RECRUITER"
+    // 🔸 Role string bhi bhejna hai — add this:
+    private String role;
+
 }
-
-
-
-/*{
-  "fullName": "Rishi Singh",
-  "email": "rishi@gmail.com",
-  "password": "rishi123",
-  "phone": "9876543210",
-  "role": "JOB_SEEKER"
-}*/

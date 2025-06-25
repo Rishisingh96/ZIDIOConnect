@@ -4,16 +4,19 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
 /*🔹 3. RecruiterProfile Entity (Details of Recruiter/Company)*/
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class RecruiterProfileDTO {
-    private Long id;
+
+    private String fullName;
     private String companyName;
+    private String email;
     private String designation;
     private String companyWebsite;
-    private Long userId;
+    private String phone;
+    private String location;
 }
+
 

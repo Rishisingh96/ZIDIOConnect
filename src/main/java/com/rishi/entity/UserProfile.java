@@ -13,14 +13,20 @@ import lombok.Setter;
 @AllArgsConstructor
 @Entity
 public class UserProfile {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private String fullName;
     private String education;
-    private String skills; // comma-separated or List<String>
+    private String skills; // e.g., "Java, Spring Boot, React"
     private String experienceSummary;
     private String resumeLink;
+    private String phone;
+    private String location;
+    private String githubLink;
+    private String linkedinLink;
 
     @OneToOne
     @JoinColumn(name = "user_id")

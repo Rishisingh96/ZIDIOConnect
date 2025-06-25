@@ -14,7 +14,6 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class JobListingDTO {
-    private Long id;
     private String title;
     private String description;
     private String location;
@@ -29,8 +28,8 @@ public class JobListingDTO {
     private Boolean isRemote;
     private String responsibilities;
     private String benefits;
+    private String companyName;
     private LocalDateTime applicationDeadline;
     private String status;
-    private String companyName;
-    private Long recruiterId;
 }
+
