@@ -65,8 +65,8 @@ public class UserProfileServiceImpl implements UserProfileService {
         if (dto.getLinkedinLink() != null) profile.setLinkedinLink(dto.getLinkedinLink());
         if (dto.getSkills() != null) {
             Set<Skill> skillEntities = dto.getSkills().stream()
-                    .map(skillDTO -> skillRepository.findByName(skillDTO.getName())
-                            .orElseGet(() -> skillRepository.save(new Skill(skillDTO.getName()))))
+                    .map(skillDTO -> skillRepository.findById(skillDTO.getId())
+                            .orElseThrow(() -> new RuntimeException("Skill not found with id: " + skillDTO.getId())))
                     .collect(Collectors.toSet());
             profile.setSkills(skillEntities);
         }

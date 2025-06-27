@@ -14,5 +14,10 @@ public class JobApplicationDTO {
     private Long jobId;
     private String resumeLink;
     private ApplicationStatus status;
+
+    private LocalDateTime appliedDate;
+    private String githubLink;
+    private String linkedinLink;
+//    private UserProfileDTO applicantProfile;
 }
 
