@@ -1,23 +1,28 @@
 package com.rishi.controller;
 
+import com.rishi.request.LoginRequest;
+import com.rishi.request.SignupRequest;
+import com.rishi.response.AuthResponse;
+import com.rishi.service.AuthService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.rishi.dto.UserProfileDTO;
 import com.rishi.service.UserProfileService;
 
+import java.security.Principal;
+
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api/users/profile")
 public class UserProfileController {
 
-    @Autowired
-    private UserProfileService userProfileService;
+
+    private final UserProfileService userProfileService;
+
 
     @GetMapping
     public ResponseEntity<UserProfileDTO> getProfile(Authentication authentication) {
@@ -26,10 +31,11 @@ public class UserProfileController {
         return ResponseEntity.ok(profileDTO);
     }
 
-    @PutMapping
-    public ResponseEntity<UserProfileDTO> updateProfile(Authentication authentication, @RequestBody UserProfileDTO profileDTO) {
-        String email = authentication.getName();
-        UserProfileDTO updated = userProfileService.updateProfile(email, profileDTO);
-        return ResponseEntity.ok(updated);
+    @PostMapping("/update")
+    public ResponseEntity<UserProfileDTO> update(@RequestBody UserProfileDTO dto, Principal principal) {
+        UserProfileDTO saved = userProfileService.createOrUpdateProfile(dto, principal.getName());
+        return ResponseEntity.ok(saved);
     }
+
+
 } 

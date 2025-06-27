@@ -12,7 +12,6 @@ public interface AuthService {
 //
 //    public UserDTO processGoogleLogin(UserDTO userDTO);
 
-
     //Normal Register and Login
     void registerUser(SignupRequest request);
 

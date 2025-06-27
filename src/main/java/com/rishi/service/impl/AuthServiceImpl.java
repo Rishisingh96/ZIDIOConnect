@@ -1,6 +1,7 @@
 package com.rishi.service.impl;
 
 import java.util.Collections;
+import java.util.HashSet;
 
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
@@ -14,12 +15,12 @@ import org.springframework.stereotype.Service;
 
 import com.rishi.config.JwtUtil;
 import com.rishi.domain.ROLE;
+import com.rishi.entity.RecruiterProfile;
 import com.rishi.entity.User;
 import com.rishi.entity.UserProfile;
-import com.rishi.entity.RecruiterProfile;
+import com.rishi.repository.RecruiterProfileRepository;
 import com.rishi.repository.UserProfileRepository;
 import com.rishi.repository.UserRepository;
-import com.rishi.repository.RecruiterProfileRepository;
 import com.rishi.request.LoginRequest;
 import com.rishi.request.SignupRequest;
 import com.rishi.response.AuthResponse;
@@ -33,30 +34,33 @@ import lombok.RequiredArgsConstructor;
 public class AuthServiceImpl implements AuthService {
 
     private final Logger logger = LoggerFactory.getLogger(AuthServiceImpl.class);
+
     private final UserRepository userRepository;
-    private final ModelMapper modelMapper;
-    private final PasswordEncoder passwordEncoder;
-    private final AuthenticationManager authenticationManager;
-    private final JwtUtil jwtUtil;
-    private final UserProfileService userProfileService;
     private final UserProfileRepository userProfileRepository;
     private final RecruiterProfileRepository recruiterProfileRepository;
 
+    private final PasswordEncoder passwordEncoder;
+    private final AuthenticationManager authenticationManager;
+    private final JwtUtil jwtUtil;
+    private final ModelMapper modelMapper;
 
-    // 🔐 Signup Logic
+    private final UserProfileService userProfileService;
+
+    // 🔐 Register New User
     @Override
     public void registerUser(SignupRequest request) {
         if (userRepository.existsByEmail(request.getEmail())) {
             throw new RuntimeException("User already exists with email: " + request.getEmail());
         }
 
+        // Create base user
         User user = new User();
         user.setEmail(request.getEmail());
         user.setFullName(request.getFullName());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setPhone(request.getPhone());
 
-        // Set role from request safely
+        // Set user role
         ROLE role;
         try {
             role = ROLE.valueOf(request.getRole().toUpperCase());
@@ -66,56 +70,66 @@ public class AuthServiceImpl implements AuthService {
         }
 
         userRepository.save(user);
-        logger.info("User registered with email: {}", request.getEmail());
+        logger.info("✅ User registered with email: {}", request.getEmail());
 
+        // Auto-create corresponding profile based on role
         if (role == ROLE.JOB_SEEKER) {
-            // Create UserProfile with basic info
             UserProfile profile = new UserProfile();
             profile.setFullName(request.getFullName());
             profile.setPhone(request.getPhone());
+            profile.setEmail(request.getEmail());
+            profile.setRoles(new HashSet<>(user.getRoles()));
             profile.setUser(user);
             userProfileRepository.save(profile);
+            logger.info("👤 UserProfile created for: {}", request.getEmail());
+
         } else if (role == ROLE.RECRUITER) {
-            // Create RecruiterProfile with basic info
-            RecruiterProfile recruiterProfile = new RecruiterProfile();
-            recruiterProfile.setPhone(request.getPhone());
-            recruiterProfile.setUser(user);
-            recruiterProfileRepository.save(recruiterProfile);
+            RecruiterProfile profile = new RecruiterProfile();
+            profile.setFullName(request.getFullName());
+            profile.setPhone(request.getPhone());
+            profile.setEmail(request.getEmail());
+            profile.setRoles(new HashSet<>(user.getRoles()));
+            profile.setUser(user);
+            recruiterProfileRepository.save(profile);
+            logger.info("🏢 RecruiterProfile created for: {}", request.getEmail());
         }
-        // For ADMIN, no profile is created by default
     }
 
-    // 🔐 Login Logic
+    // 🔐 Login User & Return JWT
     @Override
     public AuthResponse login(LoginRequest request) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
-                        request.getEmail(), request.getPassword()
+                        request.getEmail(),
+                        request.getPassword()
                 )
         );
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        // Generate JWT using email (or username)
+        // Generate JWT
         String jwt = jwtUtil.generateToken(request.getEmail());
 
+        // Get user from DB
         User user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new RuntimeException("User not found after login"));
 
+        // Build response
         AuthResponse response = new AuthResponse();
         response.setToken(jwt);
         response.setEmail(user.getEmail());
         response.setFullName(user.getFullName());
         response.setRole(user.getRoles().stream().findFirst().get().name());
 
+        logger.info("🔓 User logged in: {}", user.getEmail());
+
         return response;
     }
 
+    // 🔓 Logout
     @Override
     public String logout() {
+        // JWT is stateless; client should delete token
         return "Logged out. Client should delete JWT from local storage.";
     }
-
-    // Google login, OTP login can be added next
-
 }

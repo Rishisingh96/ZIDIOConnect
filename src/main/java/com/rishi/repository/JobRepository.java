@@ -8,11 +8,10 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface JobListingRepository  extends JpaRepository<JobListing, Long> {
+public interface JobRepository extends JpaRepository<JobListing, Long> {
 
     List<JobListing> findByStatus(String status);
 
-    List<JobListing> findByJobType(String jobType);
-
     List<JobListing> findByRecruiter(RecruiterProfile recruiter);
-} 
+}
+

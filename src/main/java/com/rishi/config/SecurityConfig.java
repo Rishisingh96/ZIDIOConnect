@@ -37,9 +37,12 @@ public class SecurityConfig {
         http.csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/**", "/api/users/create").permitAll()
-                        .requestMatchers("/api/users/profile").authenticated()
-                        .requestMatchers("/api/recruiter/profile").authenticated()
-                        .requestMatchers("/api/admin/profile").authenticated()
+                        .requestMatchers("/api/users/*").authenticated()
+                        .requestMatchers("/api/job/*").authenticated()
+                        .requestMatchers("/api/skills/*").authenticated()
+                        .requestMatchers("/api/applications/*").authenticated()
+                        .requestMatchers("/api/recruiter/*").authenticated()
+                        .requestMatchers("/api/admin/*").authenticated()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS));

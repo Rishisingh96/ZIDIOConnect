@@ -1,15 +1,14 @@
 package com.rishi.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -39,12 +38,6 @@ public class JobListing {
     @Column(length = 50)
     private String experienceLevel; // Entry, Mid, Senior
 
-    @Column(columnDefinition = "TEXT")
-    private String requiredSkills; // comma-separated
-
-    @Column(columnDefinition = "TEXT")
-    private String preferredSkills; // comma-separated
-
     @Column(length = 100)
     private String salaryRange; // ₹3LPA – ₹6LPA
 
@@ -54,10 +47,13 @@ public class JobListing {
     private Boolean isRemote;
 
     @Column(columnDefinition = "TEXT")
-    private String responsibilities; // comma-separated or paragraph
+    private String preferredSkills; // Optional: still string for now
 
     @Column(columnDefinition = "TEXT")
-    private String benefits; // Health Insurance, Paid Leave etc.
+    private String responsibilities;
+
+    @Column(columnDefinition = "TEXT")
+    private String benefits;
 
     private LocalDateTime applicationDeadline;
 
@@ -79,4 +75,12 @@ public class JobListing {
 
     @OneToMany(mappedBy = "job", cascade = CascadeType.ALL)
     private List<JobApplication> applications;
+
+    // ✅ Properly normalized skill mapping
+    @ManyToMany
+    @JoinTable(
+            name = "job_required_skills",
+            joinColumns = @JoinColumn(name = "job_id"),
+            inverseJoinColumns = @JoinColumn(name = "skill_id"))
+    private Set<Skill> requiredSkills = new HashSet<>();
 }

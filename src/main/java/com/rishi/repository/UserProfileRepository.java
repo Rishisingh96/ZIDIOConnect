@@ -1,10 +1,14 @@
 package com.rishi.repository;
 
+import com.rishi.dto.UserProfileDTO;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.rishi.entity.UserProfile;
 
+import java.util.Optional;
+
 public interface UserProfileRepository extends JpaRepository<UserProfile , Long> {
-    // Additional query methods can be defined here if needed
-    // For example, you can add methods to find UserProfile by user or user email
+    Boolean existsByEmail(String email);
+
+
 }
