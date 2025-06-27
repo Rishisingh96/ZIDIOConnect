@@ -43,7 +43,8 @@ public class SecurityConfig {
                         .requestMatchers("/api/applications/*").authenticated()
                          .requestMatchers("/api/recruiter/*").authenticated()
 //                        .requestMatchers("/api/recruiter/**").hasRole("RECRUITER")
-                        .requestMatchers("/api/admin/*").authenticated()
+//                        .requestMatchers("/api/admin/**").authenticated()
+                        .requestMatchers("/api/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
