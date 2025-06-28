@@ -22,6 +22,7 @@ public class UserProfile {
     private String education;
     private String experienceSummary;
     private String resumeLink;
+    private String profilePicture; // URL or path to the profile picture
     private String phone;
     private String location;
     private String githubLink;

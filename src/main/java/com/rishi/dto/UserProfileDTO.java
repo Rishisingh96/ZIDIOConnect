@@ -18,6 +18,7 @@ public class UserProfileDTO {
     private String education;
     private String experienceSummary;
     private String resumeLink;
+    private String profilePicture;
     private String phone;
     private String location;
     private String githubLink;

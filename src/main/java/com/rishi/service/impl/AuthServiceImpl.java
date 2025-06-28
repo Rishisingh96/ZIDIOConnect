@@ -46,6 +46,8 @@ public class AuthServiceImpl implements AuthService {
 
     private final UserProfileService userProfileService;
 
+    private final EmailServiceImpl emailService;
+
     // 🔐 Register New User
     @Override
     public void registerUser(SignupRequest request) {
@@ -71,6 +73,15 @@ public class AuthServiceImpl implements AuthService {
 
         userRepository.save(user);
         logger.info("✅ User registered with email: {}", request.getEmail());
+
+        // Send welcome email
+        emailService.sendSimpleMail(
+            request.getEmail(),
+            "Welcome to ZidioConnect",
+            "Hello " + request.getFullName() + ",\n\n" +
+            "Thank you for registering on our Job Portal. We are excited to have you on board!\n\n" +
+            "Best regards,\nJob Portal Team"
+        );
 
         // Auto-create corresponding profile based on role
         if (role == ROLE.JOB_SEEKER) {

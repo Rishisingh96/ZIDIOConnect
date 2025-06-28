@@ -29,6 +29,7 @@ public class JobListingServiceImpl implements JobListingService {
     private final RecruiterProfileRepository recruiterRepo;
     private final SkillRepository skillRepo;
     private final ModelMapper mapper;
+    private final EmailServiceImpl emailService;
 
     private Set<SkillDTO> mapSkills(Set<Skill> skills) {
         return skills.stream()
@@ -53,6 +54,9 @@ public class JobListingServiceImpl implements JobListingService {
         job.setRequiredSkills(skills);
 
         JobListing saved = jobRepo.save(job);
+
+        // Send email notification to recruiter
+        emailService.sendJobPostedNotification(recruiter.getEmail(), saved.getTitle());
 
         JobListingDTO responseDto = mapper.map(saved, JobListingDTO.class);
         responseDto.setRequiredSkills(

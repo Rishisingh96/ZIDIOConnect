@@ -26,13 +26,12 @@ public class JobApplicationServiceImpl implements JobApplicationService {
     private final UserRepository userRepo;
     private final JobApplicationRepository applicationRepo;
     private final ModelMapper mapper;
+    private final EmailServiceImpl emailService;
 
     @Override
     public JobApplicationDTO applyToJob(Long jobId, String resumeLink, String userEmail) {
         User user = userRepo.findByEmail(userEmail).orElseThrow();
         JobListing job = jobRepo.findById(jobId).orElseThrow();
-
-
 
         JobApplication application = new JobApplication();
         application.setJob(job);
@@ -54,7 +53,12 @@ public class JobApplicationServiceImpl implements JobApplicationService {
             application.setGithubLink(null);
             application.setLinkedinLink(null);
         }
+
         JobApplication saved = applicationRepo.save(application);
+
+        // Send email notification to user
+        emailService.sendJobApplicationConfirmation(user.getEmail(), job.getTitle());
+
         return mapper.map(saved, JobApplicationDTO.class);
     }
 
@@ -65,5 +69,20 @@ public class JobApplicationServiceImpl implements JobApplicationService {
         return applicationRepo.findByApplicant(user).stream()
                 .map(app -> mapper.map(app, JobApplicationDTO.class))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public void updateApplicationStatus(Long applicationId, ApplicationStatus newStatus) {
+        JobApplication application = applicationRepo.findById(applicationId)
+                .orElseThrow(() -> new RuntimeException("Application not found"));
+
+        application.setStatus(newStatus);
+        applicationRepo.save(application);
+
+        // ✅ Notify user
+        emailService.sendApplicationStatusUpdate(
+                application.getApplicant().getEmail(),
+                newStatus.name()
+        );
     }
 }

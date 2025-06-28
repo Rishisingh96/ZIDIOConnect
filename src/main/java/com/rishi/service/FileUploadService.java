@@ -1,7 +1,13 @@
 package com.rishi.service;
 
+import org.springframework.core.io.Resource;
+import org.springframework.web.multipart.MultipartFile;
+
 public interface FileUploadService {
-    String uploadFile(byte[] fileData, String fileName);
-    byte[] downloadFile(String fileName);
-    void deleteFile(String fileName);
+    String storeFile(MultipartFile file, String folderName);
+    Resource loadFile(String filename, String folderName);
+    void deleteFile(String filename, String folderName);
+
+    // Add this new method:
+    String replaceFile(MultipartFile newFile, String existingPath, String folderName);
 } 

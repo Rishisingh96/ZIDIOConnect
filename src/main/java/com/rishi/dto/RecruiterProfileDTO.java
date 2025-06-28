@@ -21,6 +21,8 @@ public class RecruiterProfileDTO {
     private String companyWebsite;
     private String phone;
     private String location;
+    private String profilePicture;
+    private String companyLogo;
 
     private Set<ROLE> roles;
 }

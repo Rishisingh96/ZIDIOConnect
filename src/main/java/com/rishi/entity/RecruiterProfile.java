@@ -28,6 +28,9 @@ public class RecruiterProfile {
     private String designation;
     private String companyWebsite;
     private String phone;
+    private String profilePicture;
+    private String companyLogo;
+
 
     @Column(unique = true)
     private String email;
