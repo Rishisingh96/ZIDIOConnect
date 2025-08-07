@@ -1,23 +1,23 @@
 package com.rishi.service.impl;
 
+import java.time.LocalDateTime;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.rishi.entity.Notification;
 import com.rishi.entity.User;
 import com.rishi.repository.NotificationRepository;
 import com.rishi.repository.UserRepository;
 import com.rishi.response.PageableResponse;
+import com.rishi.service.EmailService;
 import com.rishi.service.NotificationService;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j
@@ -29,6 +29,9 @@ public class NotificationServiceImpl implements NotificationService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private EmailService emailService;
 
     @Override
     public Notification createNotification(Long userId, String title, String message, Notification.NotificationType type) {
@@ -50,6 +53,16 @@ public class NotificationServiceImpl implements NotificationService {
             
             Notification savedNotification = notificationRepository.save(notification);
             log.info("Notification created successfully for user {}: {}", userId, title);
+            // Send email notification
+            userRepository.findById(userId).ifPresent(user -> {
+                if (user.getEmail() != null && !user.getEmail().isEmpty()) {
+                    try {
+                        emailService.sendSimpleMail(user.getEmail(), title, message);
+                    } catch (Exception e) {
+                        log.error("Failed to send email notification to {}: {}", user.getEmail(), e.getMessage());
+                    }
+                }
+            });
             return savedNotification;
         } catch (Exception e) {
             log.error("Error creating notification for user {}: {}", userId, e.getMessage());
