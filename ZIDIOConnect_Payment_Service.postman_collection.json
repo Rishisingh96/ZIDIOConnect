@@ -1,0 +1,519 @@
+{
+  "info": {
+    "name": "ZIDIOConnect Payment Service Tests",
+    "description": "Complete test collection for ZIDIOConnect payment service endpoints",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "BASE_URL",
+      "value": "http://localhost:9090",
+      "type": "string"
+    },
+    {
+      "key": "JWT_TOKEN",
+      "value": "your_jwt_token_here",
+      "type": "string"
+    },
+    {
+      "key": "USER_ID",
+      "value": "1",
+      "type": "string"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{JWT_TOKEN}}",
+        "type": "string"
+      }
+    ]
+  },
+  "item": [
+    {
+      "name": "🧪 Test Endpoints (No Auth Required)",
+      "item": [
+        {
+          "name": "Test Service Health",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BASE_URL}}/api/v1/payments/test",
+              "host": ["{{BASE_URL}}"],
+              "path": ["api", "v1", "payments", "test"]
+            },
+            "description": "Test if the payment service is working and Razorpay is configured"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Sample Payment Request",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BASE_URL}}/api/v1/payments/test/sample-request",
+              "host": ["{{BASE_URL}}"],
+              "path": ["api", "v1", "payments", "test", "sample-request"]
+            },
+            "description": "Get a sample payment request JSON for testing"
+          },
+          "response": []
+        },
+        {
+          "name": "Validate Payment Request",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"userId\": 1,\n  \"amount\": 500.0,\n  \"currency\": \"INR\",\n  \"purpose\": \"JOB_POSTING\",\n  \"paymentMethod\": \"RAZORPAY\",\n  \"relatedEntityId\": 123,\n  \"relatedEntityType\": \"JOB\",\n  \"description\": \"Test job posting payment\"\n}"
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/api/v1/payments/test/validate-request",
+              "host": ["{{BASE_URL}}"],
+              "path": ["api", "v1", "payments", "test", "validate-request"]
+            },
+            "description": "Validate a payment request without authentication"
+          },
+          "response": []
+        },
+        {
+          "name": "Create Sample Payment",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{BASE_URL}}/api/v1/payments/test/create-sample",
+              "host": ["{{BASE_URL}}"],
+              "path": ["api", "v1", "payments", "test", "create-sample"]
+            },
+            "description": "Create a sample payment for testing purposes"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "💳 Core Payment Operations",
+      "item": [
+        {
+          "name": "Process Payment (General)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"userId\": 1,\n  \"amount\": 750.0,\n  \"currency\": \"INR\",\n  \"purpose\": \"FEATURED_PROFILE\",\n  \"paymentMethod\": \"RAZORPAY\",\n  \"relatedEntityId\": 789,\n  \"relatedEntityType\": \"PROFILE\",\n  \"description\": \"Payment for featured profile promotion\"\n}"
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/api/v1/payments/process",
+              "host": ["{{BASE_URL}}"],
+              "path": ["api", "v1", "payments", "process"]
+            },
+            "description": "Process a payment with automatic Razorpay integration"
+          },
+          "response": []
+        },
+        {
+          "name": "Process Razorpay Payment (Direct)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"userId\": 1,\n  \"amount\": 1200.0,\n  \"currency\": \"INR\",\n  \"purpose\": \"PREMIUM_SUBSCRIPTION\",\n  \"paymentMethod\": \"RAZORPAY\",\n  \"relatedEntityType\": \"SUBSCRIPTION\",\n  \"description\": \"Premium subscription payment\"\n}"
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/api/v1/payments/process/razorpay",
+              "host": ["{{BASE_URL}}"],
+              "path": ["api", "v1", "payments", "process", "razorpay"]
+            },
+            "description": "Direct Razorpay payment processing"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "🔍 Payment Retrieval",
+      "item": [
+        {
+          "name": "Get Payment by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BASE_URL}}/api/v1/payments/1",
+              "host": ["{{BASE_URL}}"],
+              "path": ["api", "v1", "payments", "1"]
+            },
+            "description": "Get payment details by payment ID"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Payment by Transaction ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BASE_URL}}/api/v1/payments/transaction/TXN_1234567890_abc123",
+              "host": ["{{BASE_URL}}"],
+              "path": ["api", "v1", "payments", "transaction", "TXN_1234567890_abc123"]
+            },
+            "description": "Get payment details by transaction ID"
+          },
+          "response": []
+        },
+        {
+          "name": "Get User Payments (Paginated)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BASE_URL}}/api/v1/payments/user/{{USER_ID}}?page=0&size=5&sortBy=createdAt&sortDir=desc",
+              "host": ["{{BASE_URL}}"],
+              "path": ["api", "v1", "payments", "user", "{{USER_ID}}"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "0"
+                },
+                {
+                  "key": "size",
+                  "value": "5"
+                },
+                {
+                  "key": "sortBy",
+                  "value": "createdAt"
+                },
+                {
+                  "key": "sortDir",
+                  "value": "desc"
+                }
+              ]
+            },
+            "description": "Get paginated list of user payments"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "📊 Payment Status Management",
+      "item": [
+        {
+          "name": "Verify Payment Status",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "url": {
+              "raw": "{{BASE_URL}}/api/v1/payments/verify/TXN_1234567890_abc123",
+              "host": ["{{BASE_URL}}"],
+              "path": ["api", "v1", "payments", "verify", "TXN_1234567890_abc123"]
+            },
+            "description": "Verify payment status with gateway"
+          },
+          "response": []
+        },
+        {
+          "name": "Update Payment Status (Admin Only)",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "url": {
+              "raw": "{{BASE_URL}}/api/v1/payments/status/TXN_1234567890_abc123?status=SUCCESS",
+              "host": ["{{BASE_URL}}"],
+              "path": ["api", "v1", "payments", "status", "TXN_1234567890_abc123"],
+              "query": [
+                {
+                  "key": "status",
+                  "value": "SUCCESS"
+                }
+              ]
+            },
+            "description": "Update payment status (Admin role required)"
+          },
+          "response": []
+        },
+        {
+          "name": "Razorpay Payment Verification",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{BASE_URL}}/api/v1/payments/razorpay/verify?transactionId=TXN_1234567890_abc123&razorpayPaymentId=pay_abc123&razorpayOrderId=order_abc123&razorpaySignature=signature_abc123",
+              "host": ["{{BASE_URL}}"],
+              "path": ["api", "v1", "payments", "razorpay", "verify"],
+              "query": [
+                {
+                  "key": "transactionId",
+                  "value": "TXN_1234567890_abc123"
+                },
+                {
+                  "key": "razorpayPaymentId",
+                  "value": "pay_abc123"
+                },
+                {
+                  "key": "razorpayOrderId",
+                  "value": "order_abc123"
+                },
+                {
+                  "key": "razorpaySignature",
+                  "value": "signature_abc123"
+                }
+              ]
+            },
+            "description": "Verify Razorpay payment with signature"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "💸 Refund Operations",
+      "item": [
+        {
+          "name": "Process Refund (Admin Only)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{BASE_URL}}/api/v1/payments/refund/TXN_1234567890_abc123?amount=500&reason=Customer request",
+              "host": ["{{BASE_URL}}"],
+              "path": ["api", "v1", "payments", "refund", "TXN_1234567890_abc123"],
+              "query": [
+                {
+                  "key": "amount",
+                  "value": "500"
+                },
+                {
+                  "key": "reason",
+                  "value": "Customer request"
+                }
+              ]
+            },
+            "description": "Process payment refund (Admin role required)"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "💼 Job Portal Specific Payments",
+      "item": [
+        {
+          "name": "Job Posting Payment",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{BASE_URL}}/api/v1/payments/job-posting?userId=1&jobId=123&jobTitle=Software Engineer&amount=500",
+              "host": ["{{BASE_URL}}"],
+              "path": ["api", "v1", "payments", "job-posting"],
+              "query": [
+                {
+                  "key": "userId",
+                  "value": "1"
+                },
+                {
+                  "key": "jobId",
+                  "value": "123"
+                },
+                {
+                  "key": "jobTitle",
+                  "value": "Software Engineer"
+                },
+                {
+                  "key": "amount",
+                  "value": "500"
+                }
+              ]
+            },
+            "description": "Process job posting payment"
+          },
+          "response": []
+        },
+        {
+          "name": "Premium Job Posting Payment",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{BASE_URL}}/api/v1/payments/premium-job-posting?userId=1&jobId=456&jobTitle=Senior Developer&amount=1000",
+              "host": ["{{BASE_URL}}"],
+              "path": ["api", "v1", "payments", "premium-job-posting"],
+              "query": [
+                {
+                  "key": "userId",
+                  "value": "1"
+                },
+                {
+                  "key": "jobId",
+                  "value": "456"
+                },
+                {
+                  "key": "jobTitle",
+                  "value": "Senior Developer"
+                },
+                {
+                  "key": "amount",
+                  "value": "1000"
+                }
+              ]
+            },
+            "description": "Process premium job posting payment"
+          },
+          "response": []
+        },
+        {
+          "name": "Featured Profile Payment",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{BASE_URL}}/api/v1/payments/featured-profile?userId=1&profileId=789&amount=300",
+              "host": ["{{BASE_URL}}"],
+              "path": ["api", "v1", "payments", "featured-profile"],
+              "query": [
+                {
+                  "key": "userId",
+                  "value": "1"
+                },
+                {
+                  "key": "profileId",
+                  "value": "789"
+                },
+                {
+                  "key": "amount",
+                  "value": "300"
+                }
+              ]
+            },
+            "description": "Process featured profile payment"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "✅ Payment Validation",
+      "item": [
+        {
+          "name": "Check Payment Success",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BASE_URL}}/api/v1/payments/validate/TXN_1234567890_abc123/successful",
+              "host": ["{{BASE_URL}}"],
+              "path": ["api", "v1", "payments", "validate", "TXN_1234567890_abc123", "successful"]
+            },
+            "description": "Check if payment is successful"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "🔗 Webhook Handling",
+      "item": [
+        {
+          "name": "Payment Webhook",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{BASE_URL}}/api/v1/payments/webhook?gatewayTransactionId=order_abc123&status=SUCCESS&response={\"payment_id\":\"pay_abc123\",\"status\":\"captured\"}",
+              "host": ["{{BASE_URL}}"],
+              "path": ["api", "v1", "payments", "webhook"],
+              "query": [
+                {
+                  "key": "gatewayTransactionId",
+                  "value": "order_abc123"
+                },
+                {
+                  "key": "status",
+                  "value": "SUCCESS"
+                },
+                {
+                  "key": "response",
+                  "value": "{\"payment_id\":\"pay_abc123\",\"status\":\"captured\"}"
+                }
+              ]
+            },
+            "description": "Handle payment webhook from Razorpay"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "🧪 Test Scenarios",
+      "item": [
+        {
+          "name": "Complete Payment Flow",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BASE_URL}}/api/v1/payments/test",
+              "host": ["{{BASE_URL}}"],
+              "path": ["api", "v1", "payments", "test"]
+            },
+            "description": "Test Scenario 1: Complete Payment Flow\n1. Create Sample Payment → POST /test/create-sample\n2. Get Payment Details → GET /{paymentId}\n3. Verify Payment Status → PUT /verify/{transactionId}\n4. Check if Successful → GET /validate/{transactionId}/successful"
+          },
+          "response": []
+        },
+        {
+          "name": "Job Posting Payment Flow",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BASE_URL}}/api/v1/payments/test",
+              "host": ["{{BASE_URL}}"],
+              "path": ["api", "v1", "payments", "test"]
+            },
+            "description": "Test Scenario 2: Job Posting Payment Flow\n1. Process Job Posting Payment → POST /job-posting\n2. Get User Payments → GET /user/{userId}\n3. Update Status to Success → PUT /status/{transactionId}?status=SUCCESS"
+          },
+          "response": []
+        },
+        {
+          "name": "Refund Flow",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BASE_URL}}/api/v1/payments/test",
+              "host": ["{{BASE_URL}}"],
+              "path": ["api", "v1", "payments", "test"]
+            },
+            "description": "Test Scenario 3: Refund Flow\n1. Process Payment → POST /process\n2. Update to Success → PUT /status/{transactionId}?status=SUCCESS\n3. Process Refund → POST /refund/{transactionId}"
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}
+

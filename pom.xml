@@ -117,6 +117,22 @@
             <scope>runtime</scope>
         </dependency>
 
+
+        <!-- Payment Gateway Dep -->
+        <!-- https://mvnrepository.com/artifact/com.razorpay/razorpay-java -->
+        <dependency>
+            <groupId>com.razorpay</groupId>
+            <artifactId>razorpay-java</artifactId>
+            <version>1.4.7</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/com.stripe/stripe-java -->
+        <dependency>
+            <groupId>com.stripe</groupId>
+            <artifactId>stripe-java</artifactId>
+            <version>28.3.1</version>
+        </dependency>
+
         <!-- Dev Tools -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -124,6 +140,8 @@
             <scope>runtime</scope>
             <optional>true</optional>
         </dependency>
+
+
 
         <!-- Testing -->
         <dependency>
