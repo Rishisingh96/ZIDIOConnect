@@ -40,15 +40,19 @@ Project Title: ZidioConnect – Job Management Web Portal
 Domain: Web Application Development
 Completion: ✅ 100% Complete
 
-🔗 GitHub Repository: ZidioConnect
+🔗 GitHub Repository: https://github.com/Rishisingh96/ZIDIOConnect.git
 
 🔗 LinkedIn Posts:
+Link 1 - https://www.linkedin.com/posts/rishi-singh-in_zidio-development-internship-
 
 Start of Internship
+Linke 2 - https://www.linkedin.com/feed/update/urn:li:activity:7344125591513649152/
 
 After 1 Month
 
 🔗 Demo Video (60% Complete): Google Drive Link
+Project Demo Video: 60% complete (available on Google Drive) 
+https://drive.google.com/drive/folders/1PkFlcg_tG9uk1TGL-lUUWdN4e6bZWbtP?usp=sharing
 
 🛠️ Key Modules & Features
 🔐 1. User Authentication & Authorization
